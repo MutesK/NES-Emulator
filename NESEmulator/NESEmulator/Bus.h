@@ -1,14 +1,21 @@
 #pragma once
 
 #include <cstdint>
+#include <array>
+#include "Cpu.h"
 
-class Bus
+static const size_t RAMSIZE = 64 * 1024;
+
+class Bus final
 {
-	Bus();
-	~Bus();
-
+private:
+	Cpu _cpu;
+	std::array<uint8_t, RAMSIZE> _ram;
 public:
-	void write(uint16_t addr, uint8_t data);
-	uint8_t read(uint16_t bytes, bool cond);
+	Bus();
+	~Bus() = default;
+public:
+	void write(const uint16_t destaddr,const uint8_t data);
+	uint8_t read(const uint16_t destaddr, const bool readOnly);
 };
 

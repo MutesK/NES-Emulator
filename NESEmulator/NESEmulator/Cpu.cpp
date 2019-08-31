@@ -297,6 +297,7 @@ void Cpu::setFlag(FLAG f, bool v)
  * 페이지 경계를 넘으면 순환되고, 주소 함수가 true를 반환하면 추가로 클럭 사이클을 돌려야 함.
  */
 
+#pragma region 주소 모드
 // 주소 모드 Implied
 // 상태 비트 설정. PHA 명령과 같은 Accumulator 초기화
 uint8_t Cpu::IMP()
@@ -355,3 +356,102 @@ uint8_t Cpu::REL()
 		_addr_rel |= 0xFF00;
 	return 0;
 }
+
+// 주소 모드 Absolute
+uint8_t Cpu::ABS()
+{
+	const uint16_t low = read(_pc);
+	_pc++;
+	const uint16_t high = read(_pc);
+	_pc++;
+
+	_addr_abs = (high << 8) | low;
+	return 0;
+}
+
+// 주소 모드 Absoulte With X Offset
+uint8_t Cpu::ABX()
+{
+	const uint16_t low = read(_pc);
+	_pc++;
+	const uint16_t high = read(_pc);
+	_pc++;
+
+	_addr_abs = (high << 8) | low;
+	_addr_abs += _x;
+
+	if ((_addr_abs & 0xFF00) != (high << 8))
+		return 1;
+	else
+		return 0;
+}
+
+// 주소 모드 Absoulte With Y Offset
+uint8_t Cpu::ABY()
+{
+	const uint16_t low = read(_pc);
+	_pc++;
+	const uint16_t high = read(_pc);
+	_pc++;
+
+	_addr_abs = (high << 8) | low;
+	_addr_abs += _y;
+
+	if ((_addr_abs & 0xFF00) != (high << 8))
+		return 1;
+	else
+		return 0;
+}
+
+
+// 주소 모드 Indirect
+// 이 기능은 하드웨어 자체에서도 버그가 있다. 이 버그 까지 모방하여야 하고, 
+// 공급된 low 주소 바이트가 0xFF 라면,  높은 바이트를 읽기 위해서 페이지 경계를 넘어야 된다.
+uint8_t Cpu::IND()
+{
+	const uint16_t Ptr_low = read(_pc);
+	_pc++;
+	const uint16_t Ptr_high = read(_pc);
+	_pc++;
+
+	const uint16_t Ptr = (Ptr_high << 8) | Ptr_low;
+
+	if (Ptr_low == 0x00FF) // 하드웨어에서 있는 버그 구현 모방
+		_addr_abs = (read(Ptr & 0xFF00) << 8) | read(Ptr + 0);
+	else
+		_addr_abs = (read(Ptr + 1) << 8) | read(Ptr + 0);
+
+	return 0;
+}
+
+uint8_t Cpu::IZX()
+{
+	const uint16_t t = read(_pc);
+	_pc++;
+
+	const uint16_t lo = read((uint16_t)(t + (uint16_t)_x) & 0x00FF);
+	const uint16_t hi = read((uint16_t)(t + (uint16_t)_x + 1) & 0x00FF);
+
+	_addr_abs = (hi << 8) | lo;
+
+	return 0;
+}
+
+uint8_t Cpu::IZY()
+{
+	const uint16_t t = read(_pc);
+	_pc++;
+
+	const uint16_t lo = read(t & 0x00FF);
+	const uint16_t hi = read((t + 1) & 0x00FF);
+
+	_addr_abs = (hi << 8) | lo;
+	_addr_abs += _y;
+
+	if ((_addr_abs & 0xFF00) != (hi << 8))
+		return 1;
+	else
+		return 0;
+}
+
+#pragma endregion 
