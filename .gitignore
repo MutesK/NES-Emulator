@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+
+# Visual Studio Unused Files
+*.suo
+*.opendb
+*.ipch
+
+# Visual Studio Unused Folder
+.vs/
