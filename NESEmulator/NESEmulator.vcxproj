@@ -18,6 +18,26 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Bus.hpp" />
+    <ClInclude Include="Cartridge.h" />
+    <ClInclude Include="Mapper.h" />
+    <ClInclude Include="Mapper_000.h" />
+    <ClInclude Include="PictureProcessor.h" />
+    <ClInclude Include="PixelEngine.h" />
+    <ClInclude Include="Precompile.h" />
+    <ClInclude Include="Processor.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Bus.cpp" />
+    <ClCompile Include="Cartridge.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mapper.cpp" />
+    <ClCompile Include="Mapper_000.cpp" />
+    <ClCompile Include="PictureProcessor.cpp" />
+    <ClCompile Include="Processor.cpp" />
+    <ClCompile Include="PixelEngine.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{5CD7BDF5-17A2-4223-8614-9C31DCE3B5B3}</ProjectGuid>
@@ -110,7 +130,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
@@ -122,14 +142,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Bus.cpp" />
-    <ClCompile Include="Cpu.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Bus.h" />
-    <ClInclude Include="Cpu.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
